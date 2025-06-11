@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DR1V3 - 3D NFT</title>
+  <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+  <h1>Turn Your Car Into a 3D NFT</h1>
+  <button id="checkout-button">Pay $99</button>
+
+  <script>
+    const stripe = Stripe("pk_live_51RW9IwEpiu4msW8AaibqT0XatDTgL2T7iJayN6vxOrY3hxRQK04dunmm2oKBplaqJrJkUCejZpj1say2Z4Oyo2tu00qaWBB6g0");
+
+    document.getElementById("checkout-button").addEventListener("click", async () => {
+      const response = await fetch("/api/create-checkout-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const session = await response.json();
+      if (session.id) {
+        stripe.redirectToCheckout({ sessionId: session.id });
+      } else {
+        alert("Error creating Stripe session.");
+      }
+    });
+  </script>
+</body>
+</html>
